@@ -1,0 +1,9 @@
+{
+    "libs": [
+        "browser"
+    ],
+    "plugins": {
+        "commonjs": {},
+        "es_modules": {}
+    }
+}
