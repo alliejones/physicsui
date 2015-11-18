@@ -1,15 +1,15 @@
+import Vector from 'victor';
+
 export default function (el) {
   var state = {
-    x: 0,
-    y: 0,
+    position: new Vector(0, 0),
     dragging: false,
-    velocity: 0
+    velocity: new Vector(0, 0)
   };
-  var prevMouseX = 0;
+  var prevPosition = new Vector(0, 0);
 
   el.addEventListener('mousemove', function(e) {
-    state.x = e.clientX;
-    state.y = e.clientY;
+    state.position = new Vector(e.clientX, e.clientY);
   });
 
   document.addEventListener('mousedown', function(e) {
@@ -21,8 +21,8 @@ export default function (el) {
   });
 
   var calcVelocity = function() {
-    state.velocity = state.x - prevMouseX;
-    prevMouseX = state.x;
+    state.velocity = state.position.clone().subtract(prevPosition);
+    prevPosition = state.position.clone();
     requestAnimationFrame(calcVelocity);
   };
   requestAnimationFrame(calcVelocity);

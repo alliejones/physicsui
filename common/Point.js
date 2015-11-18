@@ -1,27 +1,42 @@
+import Vector from 'victor';
+
 export default class Point {
-  constructor(canvas, x, radius) {
+  constructor(canvas, x, y, mass = 1, damping = 1) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
-    this.x = x;
-    this.y = 150;
-    this.friction = 0;
-    this.radius = radius;
-    this.velocity = 0;
+    this.position = new Vector(x, y);
+    this.velocity = new Vector(0, 0);
+    this.acceleration = new Vector(0, 0);
+    this.mass = mass;
+    this.radius = 20; // purely decorative
+    this.damping = damping;
   }
 
-  applyVelocity() {
-    this.velocity *= 1 - this.friction;
-    this.x += this.velocity;
+  applyForce(force) {
+    this.acceleration.add(force.divide(new Vector(this.mass, this.mass)));
   }
 
-  draw() {
-    this.applyVelocity();
-    if (this.x > this.canvas.width) this.x = this.x - this.canvas.width;
-    if (this.x < 0) this.x = this.canvas.width;
+  update() {
+    this.velocity.add(this.acceleration).multiply(new Vector(this.damping, this.damping));
+    this.position.add(this.velocity);
+    this.acceleration.multiply(new Vector(0, 0));
+  }
 
+  display() {
     this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+    this.ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false);
     this.ctx.fill();
     this.ctx.closePath();
+  }
+
+  keepInWindow() {
+    if (this.position.x > this.canvas.width)
+      this.position.subtract(new Vector(this.canvas.width, 0));
+    if (this.position.x < 0)
+      this.position.addX(new Vector(this.canvas.width, 0));
+    if (this.position.y > this.canvas.height)
+      this.position.subtractY(new Vector(0, this.canvas.height));
+    if (this.position.y < 0)
+      this.position.addY(new Vector(0, this.canvas.height));
   }
 }

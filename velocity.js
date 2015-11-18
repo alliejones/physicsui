@@ -1,3 +1,5 @@
+import Vector from 'victor';
+
 import Point from './common/Point';
 import Mouse from './common/Mouse';
 
@@ -8,22 +10,19 @@ canvas.height = 300;
 canvas.style.outline = '1px solid #ccc';
 
 var mouse = new Mouse(canvas);
-var p = new Point(canvas, 100, 25);
+var p = new Point(canvas, canvas.width/2, canvas.height/2);
 
 var prevDragging = mouse.dragging;
 var draw = function() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (!prevDragging && mouse.dragging) {
-    p.velocity = 0;
-  } else if (prevDragging && !mouse.dragging) {
-    p.velocity = mouse.velocity;
-  } else if (mouse.dragging) {
-    p.x = mouse.x;
+  if (mouse.dragging) {
+    p.applyForce(new Vector(mouse.velocity.x - p.velocity.x, 0));
   }
-  prevDragging = mouse.dragging;
 
-  p.draw();
+  p.update();
+  p.keepInWindow();
+  p.display();
   requestAnimationFrame(draw);
 };
 requestAnimationFrame(draw);
