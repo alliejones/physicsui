@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head></head>
+    <body>
+        <div>
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div>
+            <input id="mass" type="range" min="1" max="50" step="0.01" value="0" style="width:400px; float: left" />
+            <div style="font-size:26px;text-align:center;float:left">&nbsp;&nbsp;mass: <span id="mass-display" ></span></div>
+        </div>
+
+        <div style="clear:both">
+            <input id="damping" type="range" min="0" max="1" step="0.01" value="0" style="width:400px; float: left" />
+            <div style="font-size: 26px; text-align: center;float:left">&nbsp;&nbsp;damping: <span id="damping-display" ></span></div>
+        </div>
+
+        <div style="clear:both">
+            <input id="stiffness" type="range" min="0" max="1" step="0.01" value="0" style="width:400px; float: left" />
+            <div style="font-size: 26px; text-align: center;float:left">&nbsp;&nbsp;stiffness: <span id="stiffness-display" ></span></div>
+        </div>
+
+        <script src="spring.js"></script>
+    </body>
+</html>
