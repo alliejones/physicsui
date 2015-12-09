@@ -1,10 +1,22 @@
 var webpack = require('webpack');
+
+var entries = [
+  'oop/velocity',
+  'oop/velocity-friction',
+  'oop/spring',
+  'fp/velocity'
+];
+
+var createEntries = function(entries) {
+  var e = {};
+  entries.forEach(name => {
+    e[name] = './'+name+'.js';
+  });
+  return e;
+};
+
 module.exports = {
-  entry: {
-    velocity: "./velocity.js",
-    "velocity-friction": "./velocity-friction.js",
-    spring: "./spring.js"
-  },
+  entry: createEntries(entries),
   output: {
     path: __dirname + '/build',
     filename: "[name].js"
