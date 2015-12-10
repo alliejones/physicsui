@@ -2,9 +2,9 @@ const canvasEl = document.getElementById('canvas');
 const ctx = canvasEl.getContext('2d');
 var prevCanvasState = null;
 
-export const canvas = function (canvasState) {
+const renderCanvas = function (canvasState) {
   var c = canvasState;
-  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.clearRect(0, 0, c.get('width'), c.get('height'));
 
   if (c !== prevCanvasState) {
     canvasEl.width = c.get('width');
@@ -16,10 +16,15 @@ export const canvas = function (canvasState) {
   }
 };
 
-export const point = function (pointState) {
+const renderPoint = function (pointState) {
   const p = pointState;
   ctx.beginPath();
   ctx.arc(p.position.x, p.position.y, p.radius, 0, 2 * Math.PI, false);
   ctx.fill();
   ctx.closePath();
+};
+
+export default function (state) {
+  renderCanvas(state.get('canvas'));
+  renderPoint(state.get('point'));
 };

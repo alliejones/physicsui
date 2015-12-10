@@ -1,12 +1,14 @@
-import { fromJS, Record, Map } from 'immutable';
+import { fromJS, Record, Map, List } from 'immutable';
 import * as Vector from './common/Vector';
 import * as Point from './common/Point';
-import * as Render from './common/Render';
+import render from './common/Render';
 
 var state = fromJS({
   point: new Point.Record({
     position: new Vector.Record({ x: 50, y: 50 }),
-    maxPosition: new Vector.Record({ x: 300, y: 500 })
+    maxPosition: new Vector.Record({ x: 500, y: 300 }),
+    // velocity: new Vector.Record({ x: 2, y: 1 })
+    velocity: new Vector.Record({ x: 0, y: 0 })
   }),
   canvas: {
     style: {
@@ -17,18 +19,20 @@ var state = fromJS({
   }
 });
 
-const tick = function(state) {
-  state = Point.tick(state);
-  return state;
+var updates = new List();
+const tick = function(state, updates) {
+  updates = updates.push((s) => Point.tick(state));
+  return applyUpdates(state, updates);
 };
 
-const render = function (state) {
-  Render.canvas(state.get('canvas'));
-  Render.point(state.get('point'));
+const applyUpdates = function(state, updates) {
+  const newState = updates.reduce((state, update) => update(state), state);
+  updates = new List();
+  return newState;
 };
 
 const drawLoop = function(state) {
-  state = tick(state);
+  state = tick(state, updates);
   render(state);
   requestAnimationFrame(() => drawLoop(state));
 };
