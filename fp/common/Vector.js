@@ -19,3 +19,10 @@ export const multiply = function(v, m) {
     y: v.y * m
   });
 };
+
+export const subtract = function (a, b) {
+  return new Vector({
+    x: a.x - b.x,
+    y: a.y - b.y
+  });
+};

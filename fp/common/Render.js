@@ -1,3 +1,5 @@
+import { List } from 'immutable';
+
 const canvasEl = document.getElementById('canvas');
 const ctx = canvasEl.getContext('2d');
 var prevCanvasState = null;
@@ -24,7 +26,28 @@ const renderPoint = function (pointState) {
   ctx.closePath();
 };
 
-export default function (state) {
+var renderCbs = [];
+export const onRender = function (cb) {
+  renderCbs.push(cb);
+};
+
+const render = function (state) {
   renderCanvas(state.get('canvas'));
   renderPoint(state.get('point'));
+};
+
+const applyUpdates = function(state, updates) {
+  const newState = updates.reduce((state, update) => update(state), state);
+  updates = new List();
+  return newState;
+};
+
+const renderLoop = function(state) {
+  state = applyUpdates(state, renderCbs);
+  render(state);
+  requestAnimationFrame(() => renderLoop(state));
+};
+
+export const startRenderLoop = function (initialState) {
+  renderLoop(initialState);
 };
